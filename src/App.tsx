@@ -1,51 +1,37 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/tauri";
-import "./App.css";
+import { Tab, Tabs, User } from "@nextui-org/react";
+import moment from "moment";
+import { useEffect, useState } from "react";
+import DataView from "./components/DataView";
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  const [time, setTime] = useState(moment().format("MMMM Do YYYY, h:mm:ss a"));
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    setGreetMsg(await invoke("greet", { name }));
-  }
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(moment().format("MMMM Do YYYY, h:mm:ss a"));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <div className="container">
-      <h1>Welcome to Tauri!</h1>
-
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="container mx-auto px-20 pt-10 min-h-screen">
+      <div className="flex justify-between items-start bg-gray-900">
+        <User
+          name="Imtiaz Al Shariar"
+          description="Developer"
+          avatarProps={{
+            src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
+          }}
+        />
+        <p>{time}</p>
       </div>
 
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-
-      <p>{greetMsg}</p>
+      <div className="mt-10">
+        <div className="mt-10">
+          <DataView />
+        </div>
+      </div>
     </div>
   );
 }
